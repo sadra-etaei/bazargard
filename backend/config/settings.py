@@ -114,3 +114,9 @@ INQUIRY_TTL_HOURS = int(os.environ.get("INQUIRY_TTL_HOURS", "48"))
 INQUIRIES_PER_DEVICE_PER_DAY = int(os.environ.get("INQUIRIES_PER_DEVICE_PER_DAY", "20"))
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Liara terminates HTTPS at its trusted reverse proxy.
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True

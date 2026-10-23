@@ -37,3 +37,8 @@ Thumbs.db
 
 # Host-specific live-artifact sync script
 /demo/build-review.js
+
+# Local deployment catalog staging
+/deploy/*.sqlite3
+# Staged compressed catalog stays local; .liaraignore explicitly includes it.
+/deploy/*.sqlite3.gz
