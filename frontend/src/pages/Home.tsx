@@ -43,7 +43,7 @@ export default function HomePage() {
         <div className="hidden max-w-2xl lg:block">
           <h1 className="text-4xl leading-[1.4] font-extrabold">قبل از اینکه بری خرید <br /><span className="bg-gradient-to-l from-brand-600 to-torob bg-clip-text text-transparent">بدون کجا بری.</span></h1>
           <p className="mt-3 text-base leading-8 text-slate-500">
-            کالا رو در مغازه‌ها و پاساژهای تهران پیدا کن، قیمت‌ها رو شفاف مقایسه کن، ببین موقع رسیدنت بازن یا نه،
+            کالا رو در مغازه‌هاو پاساژهای تهران پیدا کن، قیمت‌ها رو شفاف مقایسه کن، ببین موقع رسیدنت بازن یا نه،
             و با یک مسیر چند خرید رو یکجا انجام بده.
           </p>
         </div>
