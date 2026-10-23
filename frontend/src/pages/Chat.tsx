@@ -249,13 +249,13 @@ function Rich({ text, animate, onDone }: { text: string; animate?: boolean; onDo
     }), 16);
     return () => clearInterval(t);
   }, [animate, text]); // eslint-disable-line react-hooks/exhaustive-deps
-  text = text.slice(0, shown);
+  const visibleText = text.slice(0, shown);
   const bold = (line: string) =>
     line.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
       part.startsWith("**") && part.endsWith("**") ? <b key={i} className="font-bold">{part.slice(2, -2)}</b> : part);
   // markdown tables (model comparisons): consecutive lines that start with "|"
   const blocks: ({ kind: "line"; raw: string } | { kind: "table"; rows: string[][] })[] = [];
-  for (const raw of text.split("\n")) {
+  for (const raw of visibleText.split("\n")) {
     if (/^\s*\|/.test(raw)) {
       const cells = raw.trim().replace(/^\||\|$/g, "").split("|").map((c) => c.trim());
       const last = blocks[blocks.length - 1];

@@ -141,9 +141,9 @@ def handle(message: str, state: dict, device_id: str | None = None) -> dict:
         return _reply(state, filters, "چی می‌خوای بخری؟ اسم کالا (و اگه بخوای برند، بودجه و محدوده) رو بنویس.",
                       suggestions=_starter_suggestions())
     filters = apply_parsed(filters, p, new_search=new_search)
-    if "cheaper" in p.refine and state.get("best_price"):
+    if "cheaper" in p.refine and state.get("best_price") and not new_search and p.budget_min is None and p.budget_max is None:
         filters["budget_max"] = int(state["best_price"] * 0.95)
-    if "closer" in p.refine:
+    if "closer" in p.refine and not new_search and p.lat is None:
         filters["radius"] = max(1, (filters.get("radius") or 6) / 2)
         filters["priority"] = "near"
 

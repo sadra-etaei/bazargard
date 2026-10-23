@@ -34,3 +34,6 @@
 *.log
 .DS_Store
 Thumbs.db
+
+# Host-specific live-artifact sync script
+/demo/build-review.js

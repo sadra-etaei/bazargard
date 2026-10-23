@@ -38,3 +38,25 @@ class ShoppingContextTests(SimpleTestCase):
         self.assertEqual(reply["state"]["filters"]["budget_max"], 300)
         self.assertEqual(find.call_args.args[1].budget_max, 300)
         self.assertEqual(find.call_args.args[1].lat, 35.7)
+
+    def test_literal_budget_and_location_override_relative_model_hints(self):
+        from unittest.mock import patch
+        from .assistant import handle
+        parsed = ParsedQuery(intent="refine", keywords="charger", budget_max=2000000, lat=35.696, lon=51.408, area="جمهوری", refine=["cheaper", "closer"])
+        empty = {"total": 0, "relax": [], "notices": ["No result"]}
+        state = {"best_price": 1544100, "filters": {"q": "charger", "radius": 3, "budget_max": 1000000}}
+        with patch("catalog.assistant.llm.enabled", return_value=False), patch("catalog.assistant.parse", return_value=parsed), patch("catalog.assistant.search", return_value=empty) as find:
+            result = handle("شارژر زیر ۲ میلیون نزدیک جمهوری", state, "test")
+        self.assertEqual(result["filters"]["budget_max"], 2000000)
+        self.assertEqual(result["filters"]["radius"], 3)
+        self.assertEqual(find.call_args.args[1].budget_max, 2000000)
+
+    def test_relative_followup_still_can_reduce_price_and_radius(self):
+        from unittest.mock import patch
+        from .assistant import handle
+        parsed = ParsedQuery(intent="refine", refine=["cheaper", "closer"])
+        state = {"best_price": 1000000, "filters": {"q": "charger", "radius": 4}}
+        with patch("catalog.assistant.llm.enabled", return_value=False), patch("catalog.assistant.parse", return_value=parsed), patch("catalog.assistant.search", return_value={"total": 0, "relax": [], "notices": ["No result"]}):
+            result = handle("ارزون‌تر و نزدیک‌تر", state, "test")
+        self.assertEqual(result["filters"]["budget_max"], 950000)
+        self.assertEqual(result["filters"]["radius"], 2)
