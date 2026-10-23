@@ -1,0 +1,327 @@
+@import "tailwindcss";
+@import "@fontsource/vazirmatn/300.css";
+@import "@fontsource/vazirmatn/400.css";
+@import "@fontsource/vazirmatn/500.css";
+@import "@fontsource/vazirmatn/700.css";
+@import "@fontsource/vazirmatn/800.css";
+@import "leaflet/dist/leaflet.css";
+
+@theme {
+  --font-sans: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+  /* Torob design language: blue for actions, red for the brand mark, cool slate neutrals. */
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-200: #bfdbfe;
+  --color-brand-500: #3b82f6;
+  --color-brand-600: #2f74ef;
+  --color-brand-700: #2563eb;
+  --color-brand-800: #1e40af;
+  --color-brand-900: #1e3a8a;
+  --color-torob: #d73948;
+  --color-torob-50: #fdecee;
+  --color-ink: #1e293b;
+  --color-paper: #f5f7fb;
+  --color-surface: #ffffff;
+  --color-inverse: #1e293b;
+  --shadow-card: 0 1px 2px rgb(15 23 42 / 0.04), 0 4px 14px -4px rgb(15 23 42 / 0.08);
+  --shadow-lift: 0 2px 4px rgb(15 23 42 / 0.05), 0 12px 28px -8px rgb(37 99 235 / 0.22);
+  --shadow-float: 0 10px 40px -8px rgb(15 23 42 / 0.28);
+}
+
+:root {
+  color-scheme: light;
+}
+
+/* ---- dark theme ------------------------------------------------------------------------------
+   Tailwind colours are CSS variables, so remapping them here re-themes every utility at once:
+   the slate scale flips (50 is the lightest panel, 900 the strongest text), the pastel tints used by
+   badges and notices become deep tints, and their dark text shades become light. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-paper: #0b1220;
+  --color-surface: #121a2b;
+  --color-inverse: #27334f;
+  --color-ink: #e5e9f2;
+  --color-slate-50: #172033;
+  --color-slate-100: #1c2740;
+  --color-slate-200: #27334f;
+  --color-slate-300: #36456a;
+  --color-slate-400: #7b88a3;
+  --color-slate-500: #93a0b9;
+  --color-slate-600: #a9b4c9;
+  --color-slate-700: #c2cadb;
+  --color-slate-800: #dce2ee;
+  --color-slate-900: #f1f5f9;
+  --color-slate-950: #f8fafc;
+  --color-brand-50: #14213d;
+  --color-brand-100: #1b2c52;
+  --color-brand-200: #27427a;
+  --color-brand-800: #93c5fd;
+  --color-brand-900: #bfdbfe;
+  --color-torob-50: #3a1519;
+  --color-emerald-50: #0e2a22;
+  --color-emerald-100: #12382d;
+  --color-emerald-200: #1c5441;
+  --color-emerald-700: #6ee7b7;
+  --color-emerald-800: #a7f3d0;
+  --color-emerald-900: #d1fae5;
+  --color-amber-50: #2e2410;
+  --color-amber-100: #3d2f12;
+  --color-amber-200: #5a4417;
+  --color-amber-700: #fcd34d;
+  --color-amber-800: #fde68a;
+  --color-amber-900: #fef3c7;
+  --color-rose-50: #301519;
+  --color-rose-100: #411b21;
+  --color-rose-200: #62262f;
+  --color-rose-700: #fda4af;
+  --color-rose-800: #fecdd3;
+  --color-rose-900: #ffe4e6;
+  --color-sky-50: #0e2433;
+  --color-sky-100: #123248;
+  --color-sky-200: #1b4d6e;
+  --color-sky-700: #7dd3fc;
+  --color-sky-800: #bae6fd;
+  --color-sky-900: #e0f2fe;
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 6px 18px -6px rgb(0 0 0 / 0.55);
+  --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.4), 0 12px 28px -8px rgb(59 130 246 / 0.3);
+  --shadow-float: 0 10px 40px -8px rgb(0 0 0 / 0.7);
+}
+
+:root[data-theme="dark"] .hero-wash {
+  background:
+    radial-gradient(60% 90% at 90% 0%, rgb(59 130 246 / 0.18), transparent 70%),
+    radial-gradient(50% 80% at 5% 10%, rgb(215 57 72 / 0.14), transparent 70%),
+    var(--color-surface);
+}
+/* Map: invert the light tiles instead of loading a second tile set. */
+:root[data-theme="dark"] .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) saturate(0.75) brightness(0.92) contrast(0.92);
+}
+:root[data-theme="dark"] .leaflet-container {
+  background: #0f1729;
+}
+:root[data-theme="dark"] .leaflet-bar a {
+  background: var(--color-surface);
+  color: var(--color-slate-800);
+  border-color: var(--color-slate-200);
+}
+.pick-pin {
+  display: block;
+  width: 40px;
+  height: 48px;
+  filter: drop-shadow(0 3px 4px rgb(0 0 0 / 0.3));
+  cursor: grab;
+}
+.pick-pin:active { cursor: grabbing; }
+
+.me-pin {
+  border-color: var(--color-surface);
+}
+
+html,
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip; /* never let one wide child create a sideways scrollbar on small phones */
+}
+
+body {
+  overscroll-behavior-y: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-brand-100);
+}
+:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+button,
+a {
+  transition: background-color 0.15s, box-shadow 0.15s, transform 0.15s, color 0.15s;
+}
+.card-hover:hover {
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-1px);
+}
+.hero-wash {
+  background:
+    radial-gradient(60% 90% at 90% 0%, rgb(59 130 246 / 0.16), transparent 70%),
+    radial-gradient(50% 80% at 5% 10%, rgb(215 57 72 / 0.10), transparent 70%),
+    var(--color-surface);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.pb-safe {
+  padding-bottom: max(env(safe-area-inset-bottom), 0px);
+}
+
+/* Leaflet is LTR internally */
+.leaflet-container {
+  direction: ltr;
+  font-family: var(--font-sans);
+}
+
+.price-pin {
+  background: #1e293b;
+  color: #fff;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.25);
+  border: 2px solid #fff;
+  transform: translate(-50%, -50%);
+  display: inline-block;
+}
+.price-pin.closed {
+  background: #94a3b8;
+}
+.price-pin.active {
+  background: #f59e0b;
+  color: #1c1917;
+  z-index: 1000;
+}
+.shop-pin {
+  background: var(--color-surface);
+  color: var(--color-slate-900);
+  border-radius: 10px;
+  padding: 2px 7px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  border: 2px solid #94a3b8;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.2);
+  transform: translate(-50%, -50%);
+  display: inline-block;
+}
+.shop-pin.open { border-color: #10b981; }
+.shop-pin.maybe { border-color: #f59e0b; border-style: dashed; }
+.shop-pin.closed { color: #94a3b8; }
+.shop-pin.torob { background: var(--color-inverse); color: #fff; border-color: #fff; }
+.me-pin {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #2563eb;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 6px rgb(37 99 235 / 0.25);
+  transform: translate(-50%, -50%);
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.animate-rise {
+  animation: rise 0.22s ease-out;
+}
+@keyframes notice-in {
+  from {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-notice {
+  animation: notice-in 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+@keyframes notice-shrink {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+.notice-bar {
+  animation: notice-shrink linear forwards;
+}
+
+/* Everything that can be chosen shows a hand cursor; disabled things say so. */
+button:not(:disabled),
+[role="button"],
+[role="tab"],
+a[href],
+summary,
+select,
+label[for],
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"],
+.cursor-choose,
+.price-pin,
+.shop-pin {
+  cursor: pointer;
+}
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-fadein {
+  animation: fadein 0.25s ease-out;
+}
+
+/* On tablets and up, bottom sheets become centered dialogs that fade in. */
+@media (min-width: 768px) {
+  .animate-rise {
+    animation: fadein 0.2s ease-out;
+  }
+}
+
+
+.cluster-pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  background: #1d4ed8;
+  color: #fff;
+  font-weight: 800;
+  font-size: 13px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.3);
+}
+.shop-pin {
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

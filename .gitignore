@@ -1,0 +1,36 @@
+# Credentials and machine-local configuration
+.env
+.env.*
+!.env.example
+.claude/
+.codex/
+.agents/
+
+# Python
+**/.venv/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+# Catalog, private shopper records, and supplied challenge data
+*.sqlite3
+*.sqlite3-*
+*.db
+/backend/data/
+/backend/staticfiles/
+/dataset/*
+!/dataset/README.txt
+
+# Frontend generated files
+**/node_modules/
+/frontend/dist/
+*.tsbuildinfo
+
+# Demo working assets and render outputs
+/demo/build/
+/demo/output/
+/demo/assets/
+*.log
+.DS_Store
+Thumbs.db
